@@ -66,7 +66,8 @@ class PasswordField: UIControl {
         textField.enablesReturnKeyAutomatically = true
         textField.isSecureTextEntry = true
         textField.delegate = self
-        textField.bringSubviewToFront(showHideButton)
+        textField.rightView = showHideButton
+        textField.rightViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
         textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8.0).isActive = true
@@ -80,7 +81,6 @@ class PasswordField: UIControl {
         showHideButton.translatesAutoresizingMaskIntoConstraints = false
         showHideButton.addTarget(self, action: #selector(showHideTapped), for: .touchUpInside)
         textField.addSubview(showHideButton)
-        showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: -textFieldMargin).isActive = true
         showHideButton.centerYAnchor.constraint(equalTo: textField.centerYAnchor, constant: 0).isActive = true
 
         // Weak View
