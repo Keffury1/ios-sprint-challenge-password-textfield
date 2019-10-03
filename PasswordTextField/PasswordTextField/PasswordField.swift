@@ -72,6 +72,7 @@ class PasswordField: UIControl {
         // Show Hide Button
         showHideButton.setImage(image1, for: .normal)
         showHideButton.translatesAutoresizingMaskIntoConstraints = false
+        showHideButton.addTarget(self, action: #selector(showHideTapped), for: .touchUpInside)
         textField.addSubview(showHideButton)
         showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: -10.0).isActive = true
         showHideButton.centerYAnchor.constraint(equalTo: textField.centerYAnchor, constant: 0).isActive = true
@@ -132,14 +133,80 @@ class PasswordField: UIControl {
         super.init(coder: aDecoder)
         setup()
     }
+    
+    // Method to determin the strength of the password
+    
+    func determineStrength(password: String) {
+        
+        if password.count <= 9 {
+            weakView.backgroundColor = weakColor
+            performFlare(view: weakView)
+            strengthDescriptionLabel.text = "Too Weak"
+
+        } else if password.count >= 10 && password.count <= 19 {
+            
+            weakView.backgroundColor = weakColor
+            mediumView.backgroundColor = mediumColor
+            performFlare(view: mediumView)
+            strengthDescriptionLabel.text = "Could be stronger"
+            
+        } else {
+            
+            weakView.backgroundColor = weakColor
+            mediumView.backgroundColor = mediumColor
+            strongView.backgroundColor = strongColor
+            performFlare(view: strongView)
+            strengthDescriptionLabel.text = "Strong password"
+            
+        }
+        
+        
+    }
+    
+    
+    // Method to perform flare on a certain view
+    
+    func performFlare(view: UIView) {
+        func flare()   { view.transform = CGAffineTransform(scaleX: 1.6, y: 1.6) }
+        func unflare() { view.transform = .identity }
+      
+        UIView.animate(withDuration: 0.3,
+                     animations: { flare() },
+                     completion: { _ in UIView.animate(withDuration: 0.1) { unflare() }})
+    }
+    
+    
+    // Method to hide and unhide password
+    
+    @objc func showHideTapped() {
+        if showHideButton.currentImage == image1 {
+            showHideButton.setImage(image2, for: .normal)
+            textField.isSecureTextEntry = false
+        } else {
+            showHideButton.setImage(image1, for: .normal)
+            textField.isSecureTextEntry = true
+        }
+    }
+    
+    
+    
+    
 }
+
+
+
+
+
 
 extension PasswordField: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldText = textField.text!
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
-        // TODO: send new text to the determine strength method
+        
+        password = newText
+        determineStrength(password: password)
+        
         return true
     }
 }
