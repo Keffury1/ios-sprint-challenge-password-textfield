@@ -62,7 +62,7 @@ class PasswordField: UIControl {
         
         textField.layer.cornerRadius = 8.0
         textField.layer.borderColor = textFieldBorderColor.cgColor
-        textField.layer.borderWidth = 2.0
+        textField.layer.borderWidth = 1.0
         textField.enablesReturnKeyAutomatically = true
         textField.isSecureTextEntry = true
         textField.delegate = self
